@@ -142,9 +142,9 @@ function VerifyWhatsAppContent() {
               <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-6 h-6 text-blue-400" />
               </div>
-              <h2 className="font-display text-2xl font-bold text-white">Verify your WhatsApp</h2>
+              <h2 className="font-display text-2xl font-bold text-white">Verify your Account</h2>
               <p className="text-sm text-brand-muted mt-2">
-                We sent a 6-digit verification code to your WhatsApp number <span className="text-white font-semibold">{phone}</span>.
+                Enter the 6-digit verification code sent to your WhatsApp <span className="text-white font-semibold">{phone}</span>.
               </p>
             </div>
 

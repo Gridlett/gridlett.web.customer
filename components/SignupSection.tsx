@@ -255,7 +255,7 @@ function TenantSignupForm({
       }
 
       // Redirect to WhatsApp verification screen
-      router.push(`/verify-whatsapp?phone=${encodeURIComponent(data.whatsapp)}`)
+      router.push(`/verify-account?phone=${encodeURIComponent(data.whatsapp)}`)
     } catch (err: any) {
       setApiError(err.message)
     } finally {
