@@ -376,7 +376,7 @@ function TenantSignupForm({
         )}
 
         {/* Password Requirement Checklist (Laws) */}
-        <div className="mt-3 grid grid-cols-2 gap-2 text-xs border border-brand-border/30 rounded-xl p-3 bg-brand-black/20">
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs border border-brand-border/30 rounded-xl p-3 bg-brand-black/20">
           <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-400 font-semibold' : 'text-slate-500'}`}>
             <CheckCircle2 className="w-3.5 h-3.5" />
             At least 8 characters
