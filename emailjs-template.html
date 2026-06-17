@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New support inquiry from Gridlett Website</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #080D1A;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #0D1525;
+            border: 1px solid #1E2D45;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+        .header {
+            padding: 30px 40px;
+            background: linear-gradient(135deg, #0D1525, #111827);
+            border-bottom: 1px solid #1E2D45;
+            text-align: center;
+        }
+        .logo-container {
+            display: inline-block;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            text-align: center;
+            vertical-align: middle;
+            line-height: 44px;
+            margin-bottom: 16px;
+        }
+        .logo-icon {
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .header-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+        .content {
+            padding: 30px 40px;
+        }
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            background-color: rgba(30, 45, 69, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(30, 45, 69, 0.4);
+        }
+        .meta-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(30, 45, 69, 0.3);
+        }
+        .meta-table tr:last-child td {
+            border-bottom: none;
+        }
+        .meta-label {
+            font-weight: 600;
+            color: #64748B;
+            width: 30%;
+        }
+        .meta-value {
+            color: #CBD5E1;
+            font-weight: 500;
+        }
+        .message-section {
+            background-color: rgba(30, 45, 69, 0.1);
+            border-left: 3px solid #3b82f6;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 10px;
+            color: #E2E8F0;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .message-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .footer {
+            padding: 20px 40px;
+            background-color: #0B101D;
+            border-top: 1px solid #1E2D45;
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: #64748B;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .footer-link {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo & Header -->
+        <div class="header">
+            <div class="logo-container">
+                <span class="logo-icon">&#9889;</span>
+            </div>
+            <h2 class="header-title">New Operational Inquiry</h2>
+        </div>
+
+        <!-- Details -->
+        <div class="content">
+            <table class="meta-table">
+                <tr>
+                    <td class="meta-label">Name</td>
+                    <td class="meta-value">{{name}}</td>
+                </tr>
+                <tr>
+                    <td class="meta-label">Role</td>
+                    <td class="meta-value">{{role}}</td>
+                </tr>
+                <tr>
+                    <td class="meta-label">Email</td>
+                    <td class="meta-value">
+                        <a href="mailto:{{email}}" style="color: #60a5fa; text-decoration: none;">{{email}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="meta-label">WhatsApp</td>
+                    <td class="meta-value">
+                        <a href="https://wa.me/{{phone}}" style="color: #10B981; text-decoration: none;">{{phone}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="meta-label">Subject</td>
+                    <td class="meta-value" style="font-weight: 700;">{{subject}}</td>
+                </tr>
+            </table>
+
+            <div class="message-title">Inquiry Message:</div>
+            <div class="message-section">{{message}}</div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="footer">
+            <p class="footer-text">
+                This inquiry was submitted via the contact form on the 
+                <a href="https://gridlett.com" class="footer-link">Gridlett Customer Website</a>.
+            </p>
+            <p class="footer-text" style="margin-top: 4px;">
+                &copy; 2026 Gridlett. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

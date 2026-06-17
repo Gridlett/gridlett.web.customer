@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Zap, Mail, MessageSquare, Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import emailjs from '@emailjs/browser'
+
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -41,9 +43,33 @@ export default function ContactPage() {
       return
     }
 
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS is not fully configured in environment variables.')
+      setErrorMsg('Email sending is not configured yet. Please configure the required environment variables.')
+      setSubmitStatus('error')
+      setIsSubmitting(false)
+      return
+    }
+
     try {
-      // Simulate form submission to operations API
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Send form data via EmailJS
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          name: formData.name,
+          role: formData.role,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject || 'No Subject',
+          message: formData.message,
+        },
+        publicKey
+      )
       
       setSubmitStatus('success')
       setFormData({
@@ -55,6 +81,7 @@ export default function ContactPage() {
         message: '',
       })
     } catch (err) {
+      console.error('EmailJS Submission Error:', err)
       setErrorMsg('Failed to send message. Please try again or email operations@gridlett.com.')
       setSubmitStatus('error')
     } finally {

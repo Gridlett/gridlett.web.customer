@@ -26,8 +26,8 @@ export default function Footer() {
 
   const trustLinks = [
     { label: 'FAQs', href: '/faq' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Privacy Policy', href: '#' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Privacy Policy', href: '/privacy' },
   ]
 
   return (
