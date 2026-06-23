@@ -14,9 +14,8 @@ interface FAQItemProps {
 function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
   return (
     <div
-      className={`glass-card rounded-2xl overflow-hidden border transition-all duration-300 ${
-        isOpen ? 'border-brand-blue/50' : 'border-brand-border/40 hover:border-brand-border/80'
-      }`}
+      className={`glass-card rounded-2xl overflow-hidden border transition-all duration-300 ${isOpen ? 'border-brand-blue/50' : 'border-brand-border/40 hover:border-brand-border/80'
+        }`}
     >
       <button
         onClick={onToggle}
@@ -68,7 +67,7 @@ const SUBSCRIBER_FAQS = [
   },
   {
     question: 'Can I run my refrigerator or iron on the Essential plan?',
-    answer: 'No. The Essential plan is rated for a 300W limit, which is perfect for lights, fans, and electronics. Appliances like refrigerators (typically 600W+ surge) and irons (typically 1000W+) exceed this limit and will trigger the automated cut-off. For high-draw appliances, upgrade to our Standard (1200W) or Premium (2300W) plans.',
+    answer: 'No. The Essential plan is rated for a 400W limit, which is perfect for lights, fans, and electronics. Appliances like refrigerators (typically 600W+ surge) and irons (typically 1000W+) exceed this limit and will trigger the automated cut-off. For high-draw appliances, upgrade to our Standard (1200W) or Premium (2300W) plans.',
   },
   {
     question: 'How do I fund my wallet and renew my subscription?',
@@ -142,22 +141,20 @@ export default function FAQClient() {
           <div className="bg-brand-navy/60 border border-brand-border/40 p-1.5 rounded-2xl flex gap-1.5 backdrop-blur-md">
             <button
               onClick={() => handleTabChange('subscribers')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${
-                activeTab === 'subscribers'
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${activeTab === 'subscribers'
                   ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
                   : 'text-brand-text hover:text-white'
-              }`}
+                }`}
             >
               <User className="w-4 h-4" />
               For Subscribers
             </button>
             <button
               onClick={() => handleTabChange('hosts')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${
-                activeTab === 'hosts'
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${activeTab === 'hosts'
                   ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
                   : 'text-brand-text hover:text-white'
-              }`}
+                }`}
             >
               <Building2 className="w-4 h-4" />
               For Hosts
