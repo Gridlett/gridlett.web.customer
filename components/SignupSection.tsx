@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Zap, CheckCircle2, Loader2,
-  Wifi, Tv, Wind, Sun, ChevronRight, Eye, EyeOff
+  Wifi, Tv, Wind, Sun, ChevronRight, Eye, EyeOff, Building2
 } from 'lucide-react'
 
 interface MappedPlan {
@@ -29,6 +29,26 @@ const formatClusterCode = (value: string): string => {
   if (digits.length <= 3) return digits
   if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
   return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`
+}
+
+// Helper to resolve subdomain
+const getSubdomain = () => {
+  if (typeof window === 'undefined') return null
+  const hostname = window.location.hostname
+  const searchParams = new URLSearchParams(window.location.search)
+  const override = searchParams.get('subdomain')
+  if (override) return override
+
+  const parts = hostname.split('.')
+  if (parts.length > 2) {
+    if (parts[0] === 'www') return parts[1]
+    return parts[0]
+  }
+  // Localhost dev fallback
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'energy-sphere' // Default to energy-sphere for seamless dev testing
+  }
+  return null
 }
 
 // ── Zod Schemas ────────────────────────────────────────────────
@@ -100,98 +120,26 @@ const mapBackendPlan = (plan: any): MappedPlan => {
   }
 }
 
-// ── Tier Card ──────────────────────────────────────────────────
-
-function TierCard({
-  tier,
-  selected,
-  onSelect,
-}: {
-  tier: MappedPlan
-  selected: boolean
-  onSelect: () => void
-}) {
-  const isBlue = tier.color === 'blue'
-  const accentClr = isBlue ? '#3b82f6' : '#10B981'
-  const accentBg = isBlue ? 'rgba(59,130,246,0.08)' : 'rgba(16,185,129,0.08)'
-  const accentBdr = isBlue ? 'rgba(59,130,246,0.3)' : 'rgba(16,185,129,0.3)'
-  const Icon = tier.icon
-
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className="tier-card text-left w-full rounded-2xl p-5 glass-card"
-      style={{
-        borderColor: selected ? accentClr : 'rgba(30,45,69,0.8)',
-        borderWidth: '2px',
-        boxShadow: selected ? `0 0 0 1px ${accentClr}22, 0 8px 32px ${accentClr}18` : 'none',
-        transition: 'all 0.25s ease',
-      }}
-    >
-      {/* Badge */}
-      {tier.badge && (
-        <div className="absolute top-3 right-3">
-          <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full text-white"
-            style={{ background: 'linear-gradient(135deg, #60a5fa, #3b82f6)' }}>
-            {tier.badge}
-          </span>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: selected ? accentBg : 'rgba(30,45,69,0.4)', border: `1px solid ${selected ? accentBdr : 'transparent'}` }}>
-          <Icon className="w-5 h-5" style={{ color: selected ? accentClr : '#64748B' }} />
-        </div>
-        <div>
-          <p className="font-display font-bold text-white text-base leading-none">{tier.name}</p>
-          <p className="text-xs font-mono mt-0.5" style={{ color: accentClr }}>{tier.watt} cap</p>
-        </div>
-      </div>
-
-      {/* Price */}
-      <div className="mb-3">
-        <span className="font-display text-2xl font-extrabold" style={{ color: selected ? accentClr : '#CBD5E1' }}>
-          {tier.price}
-        </span>
-        <span className="text-xs text-brand-muted ml-1">{tier.sub}</span>
-      </div>
-
-      <p className="text-xs text-brand-muted leading-relaxed mb-3">{tier.description}</p>
-
-      {/* Includes */}
-      <ul className="space-y-1.5">
-        {tier.includes.map((item) => (
-          <li key={item} className="flex items-center gap-2 text-xs" style={{ color: '#94A3B8' }}>
-            <CheckCircle2 className="w-3 h-3 shrink-0" style={{ color: accentClr }} />
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      {/* Selected indicator */}
-      {selected && (
-        <div className="mt-4 flex items-center gap-1.5 text-xs font-semibold" style={{ color: accentClr }}>
-          <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: accentClr }} />
-          Selected
-        </div>
-      )}
-    </button>
-  )
-}
-
 // ── Tenant Form ────────────────────────────────────────────────
 
 function TenantSignupForm({
   selectedPlanId,
   setSelectedPlanId,
   plans,
+  subdomain,
+  clusters,
+  selectedClusterCode,
+  setSelectedClusterCode,
+  fetchPlansForCluster,
 }: {
   selectedPlanId: string
   setSelectedPlanId: (id: string) => void
   plans: any[]
+  subdomain: string | null
+  clusters: any[]
+  selectedClusterCode: string
+  setSelectedClusterCode: (code: string) => void
+  fetchPlansForCluster: (code: string) => Promise<void>
 }) {
   const router = useRouter()
   const {
@@ -249,7 +197,7 @@ function TenantSignupForm({
         body: JSON.stringify(payload),
       })
 
-      const respData = await res.json().catch(() => ({}))
+      const respData = res.ok ? await res.json().catch(() => ({})) : {}
       if (!res.ok || respData.status === false) {
         throw new Error(respData.message || 'Failed to submit registration. Please try again.')
       }
@@ -272,27 +220,75 @@ function TenantSignupForm({
       )}
 
       <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label className="field-label">Cluster code</label>
-          <input
-            {...register('clusterCode', {
-              onChange: (e) => {
-                const formatted = formatClusterCode(e.target.value)
-                setValue('clusterCode', formatted)
-              }
-            })}
-            id="cluster-code-input"
-            placeholder="e.g. 123-456-789"
-            maxLength={11}
-            className={`field-input font-mono tracking-widest ${errors.clusterCode ? 'error' : ''}`}
-          />
-          <p className="text-xs text-brand-muted mt-1.5">
-            Enter the 9-digit cluster code provided by your property manager.
-          </p>
-          {errors.clusterCode && (
-            <p className="text-xs text-red-400 mt-1">{errors.clusterCode.message}</p>
-          )}
-        </div>
+        {subdomain ? (
+          <div>
+            <label className="field-label">Select Location / Estate</label>
+            <div className="relative flex items-center rounded-xl overflow-hidden"
+              style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)' }}>
+              <div className="absolute left-4 pointer-events-none flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-blue-400" />
+              </div>
+              <select
+                value={selectedClusterCode}
+                onChange={(e) => {
+                  const code = e.target.value
+                  setSelectedClusterCode(code)
+                  const formatted = formatClusterCode(code)
+                  setValue('clusterCode', formatted, { shouldValidate: true })
+                  fetchPlansForCluster(code)
+                }}
+                className="w-full bg-transparent pl-12 pr-10 py-4 font-display font-semibold text-sm text-brand-text select-custom-icon appearance-none cursor-pointer focus:outline-none"
+                style={{ color: '#E2E8F0' }}
+              >
+                <option value="" style={{ background: '#0D1525', color: '#94A3B8' }}>
+                  -- Choose location --
+                </option>
+                {clusters.map((c: any) => {
+                  const codeVal = c.propertyCode || c.code || ''
+                  return (
+                    <option key={c.id} value={codeVal} style={{ background: '#0D1525', color: '#E2E8F0' }}>
+                      {c.name}
+                    </option>
+                  )
+                })}
+              </select>
+              <div className="absolute right-4 pointer-events-none flex items-center justify-center">
+                <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            {errors.clusterCode && (
+              <p className="text-xs text-red-400 mt-1">{errors.clusterCode.message}</p>
+            )}
+          </div>
+        ) : (
+          <div>
+            <label className="field-label">Cluster code</label>
+            <input
+              {...register('clusterCode', {
+                onChange: (e) => {
+                  const formatted = formatClusterCode(e.target.value)
+                  setValue('clusterCode', formatted, { shouldValidate: true })
+                  const clean = e.target.value.replace(/\D/g, '')
+                  if (clean.length === 9) {
+                    fetchPlansForCluster(clean)
+                  }
+                }
+              })}
+              id="cluster-code-input"
+              placeholder="e.g. 123-456-789"
+              maxLength={11}
+              className={`field-input font-mono tracking-widest ${errors.clusterCode ? 'error' : ''}`}
+            />
+            <p className="text-xs text-brand-muted mt-1.5">
+              Enter the 9-digit cluster code provided by your property manager.
+            </p>
+            {errors.clusterCode && (
+              <p className="text-xs text-red-400 mt-1">{errors.clusterCode.message}</p>
+            )}
+          </div>
+        )}
 
         <div>
           <label className="field-label">WhatsApp number</label>
@@ -375,7 +371,7 @@ function TenantSignupForm({
           <p className="text-xs text-red-400 mt-1.5">{errors.password.message}</p>
         )}
 
-        {/* Password Requirement Checklist (Laws) */}
+        {/* Password Requirement Checklist */}
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs border border-brand-border/30 rounded-xl p-3 bg-brand-black/20">
           <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-400 font-semibold' : 'text-slate-500'}`}>
             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -455,154 +451,154 @@ function TenantSignupForm({
   )
 }
 
-
-// ── Tier Card Skeleton ─────────────────────────────────────────
-
-function TierCardSkeleton() {
-  return (
-    <div
-      className="w-full rounded-2xl p-5 glass-card border animate-pulse min-h-[260px] flex flex-col justify-between"
-      style={{
-        borderColor: 'rgba(30,45,69,0.8)',
-        borderWidth: '2px',
-      }}
-    >
-      <div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-slate-800/80" />
-          <div className="space-y-2 flex-1">
-            <div className="h-4 bg-slate-800/80 rounded w-2/3" />
-            <div className="h-3 bg-slate-800/80 rounded w-1/3" />
-          </div>
-        </div>
-        <div className="h-6 bg-slate-800/80 rounded w-1/2 mb-4" />
-        <div className="h-3 bg-slate-800/80 rounded w-5/6 mb-2" />
-        <div className="h-3 bg-slate-800/80 rounded w-2/3" />
-      </div>
-      <div className="space-y-2 mt-4">
-        <div className="h-3 bg-slate-800/80 rounded w-11/12" />
-        <div className="h-3 bg-slate-800/80 rounded w-9/12" />
-      </div>
-    </div>
-  )
-}
-
 // ── Main SignupSection ─────────────────────────────────────────
 
 export default function SignupSection() {
   const [plans, setPlans] = useState<any[]>([])
   const [selectedPlanId, setSelectedPlanId] = useState<string>('')
   const [isLoadingPlans, setIsLoadingPlans] = useState<boolean>(true)
+  const searchParams = useSearchParams()
+  const planParam = searchParams.get('plan')?.toLowerCase()
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'
-        const res = await fetch(`${baseUrl}/v1/Plan/Get/System`)
+  const [subdomain, setSubdomain] = useState<string | null>(null)
+  const [clusters, setClusters] = useState<any[]>([])
+  const [isLoadingClusters, setIsLoadingClusters] = useState<boolean>(false)
+  const [selectedClusterCode, setSelectedClusterCode] = useState<string>('')
+
+  // Fetch plans specifically for a selected cluster
+  const fetchPlansForCluster = async (code: string) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'
+      const clean = code.replace(/\D/g, '')
+      if (clean.length === 9) {
+        setIsLoadingPlans(true)
+        const res = await fetch(`${baseUrl}/v1/Plan/Get/Cluster?clusterCode=${clean}`)
         const data = await res.json()
-        if (data.status && Array.isArray(data.data)) {
-          const sortedPlans = [...data.data].sort((a: any, b: any) => a.sortOrder - b.sortOrder)
-          setPlans(sortedPlans)
+        if (data.status && Array.isArray(data.data) && data.data.length > 0) {
+          const sorted = [...data.data].sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+          setPlans(sorted)
 
-          // Select standard plan (sortOrder = 2) by default, or fallback to first plan
-          const standardPlan = sortedPlans.find((p: any) => p.sortOrder === 2)
+          // Select standard plan (sortOrder = 2) or fallback to first
+          const standardPlan = sorted.find((p: any) => p.sortOrder === 2)
           if (standardPlan) {
             setSelectedPlanId(standardPlan.id)
-          } else if (sortedPlans.length > 0) {
-            setSelectedPlanId(sortedPlans[0].id)
+          } else if (sorted.length > 0) {
+            setSelectedPlanId(sorted[0].id)
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to fetch cluster-specific plans, keeping default:', err)
+    } finally {
+      setIsLoadingPlans(false)
+    }
+  }
+
+  useEffect(() => {
+    const detectSubdomainAndFetchPlans = async () => {
+      const sub = getSubdomain()
+      let resolvedPlans = []
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'
+
+        // 1. Fetch system plans
+        const plansRes = await fetch(`${baseUrl}/v1/Plan/Get/System`)
+        const plansData = await plansRes.json()
+        if (plansData.status && Array.isArray(plansData.data)) {
+          const sortedPlans = [...plansData.data].sort((a: any, b: any) => a.sortOrder - b.sortOrder)
+          setPlans(sortedPlans)
+          resolvedPlans = sortedPlans
+        }
+
+        // 2. Resolve subdomain and get partner clusters
+        if (sub && sub !== 'customer' && sub !== 'main') {
+          setSubdomain(sub)
+          setIsLoadingClusters(true)
+          const clustersRes = await fetch(`${baseUrl}/v1/Cluster/Get/Partner?subdomain=${sub}`)
+          const clustersData = await clustersRes.json()
+          if (clustersData.status && Array.isArray(clustersData.data)) {
+            setClusters(clustersData.data)
+          }
+        } else if (typeof window !== 'undefined') {
+          // In production, direct access without subdomain is redirected to gridlett.com
+          if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            window.location.href = 'https://gridlett.com'
+            return
           }
         }
       } catch (err) {
-        console.error('Failed to fetch system plans:', err)
+        console.error('Initialization failed:', err)
       } finally {
+        setIsLoadingClusters(false)
         setIsLoadingPlans(false)
+      }
+
+      // Pre-fill selection based on 'plan' query param
+      if (resolvedPlans.length > 0) {
+        let matchedPlan = null
+        if (planParam) {
+          matchedPlan = resolvedPlans.find(
+            (p: any) =>
+              p.id.toLowerCase() === planParam ||
+              p.name.toLowerCase() === planParam ||
+              p.sortOrder.toString() === planParam
+          )
+        }
+
+        if (matchedPlan) {
+          setSelectedPlanId(matchedPlan.id)
+        } else {
+          const standardPlan = resolvedPlans.find((p: any) => p.sortOrder === 2)
+          if (standardPlan) {
+            setSelectedPlanId(standardPlan.id)
+          } else if (resolvedPlans.length > 0) {
+            setSelectedPlanId(resolvedPlans[0].id)
+          }
+        }
       }
     }
 
-    fetchPlans()
-  }, [])
+    detectSubdomainAndFetchPlans()
+  }, [planParam])
 
   return (
-    <section id="signup" className="relative z-10 py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-
+    <section id="signup" className="relative z-10 py-12 px-6">
+      <div className="max-w-2xl mx-auto">
         {/* Section header */}
-        <div className="text-center mb-14">
-          <p className="text-xs font-semibold tracking-widest text-emerald-400 uppercase mb-3">Get started</p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-white">
-            Choose your{' '}
-            <span className="text-gradient-blue">energy tier</span>
-            , then sign up
+        <div className="text-center mb-8">
+          <p className="text-xs font-semibold tracking-widest text-emerald-400 uppercase mb-3">Create Account</p>
+          <h2 className="font-display text-3xl font-bold text-white">
+            Register with <span className="text-gradient-blue">Gridlett</span>
           </h2>
-          <p className="mt-4 text-brand-text max-w-lg mx-auto text-sm leading-relaxed">
-            Pick the usage level that fits your needs. Then register as a tenant below.
+          <p className="mt-3 text-brand-text max-w-md mx-auto text-sm leading-relaxed">
+            {isLoadingClusters ? 'Loading partner details...' : 'Join your estate’s smart solar microgrid in just a few steps.'}
           </p>
-        </div>
-
-        {/* Tier Selector */}
-        <div id="tiers" className="grid md:grid-cols-3 gap-4 mb-12">
-          {isLoadingPlans ? (
-            <>
-              <TierCardSkeleton />
-              <TierCardSkeleton />
-              <TierCardSkeleton />
-            </>
-          ) : plans.length > 0 ? (
-            plans.map((plan) => {
-              const mapped = mapBackendPlan(plan)
-              return (
-                <TierCard
-                  key={mapped.id}
-                  tier={mapped}
-                  selected={selectedPlanId === mapped.id}
-                  onSelect={() => {
-                    setSelectedPlanId(mapped.id)
-                    const signupCard = document.getElementById('signup-card')
-                    if (signupCard) {
-                      signupCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                      setTimeout(() => {
-                        const input = document.getElementById('cluster-code-input')
-                        if (input) input.focus()
-                      }, 500)
-                    }
-                  }}
-                />
-              )
-            })
-          ) : (
-            <div className="col-span-3 text-center py-8 text-brand-muted text-sm glass-card rounded-2xl border border-brand-border/40">
-              No plans found. Please check back later.
-            </div>
-          )}
         </div>
 
         {/* Signup Card */}
-        <div id="signup-card" className="max-w-2xl mx-auto">
-          <div className="glass-card rounded-3xl overflow-hidden"
-            style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.4)' }}>
+        <div className="glass-card rounded-3xl overflow-hidden"
+          style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.4)' }}>
 
-            {/* Form body */}
-            <div className="p-7 md:p-8">
-              <div className="mb-6">
-                <h3 className="font-display font-bold text-white text-xl">Sign Up</h3>
-                <p className="text-sm text-brand-muted mt-1">
-                  Join an existing Gridlett-enabled property using your property code.
-                </p>
-              </div>
-              <TenantSignupForm
-                selectedPlanId={selectedPlanId}
-                setSelectedPlanId={setSelectedPlanId}
-                plans={plans}
-              />
-            </div>
+          {/* Form body */}
+          <div className="p-7 md:p-8">
+            <TenantSignupForm
+              selectedPlanId={selectedPlanId}
+              setSelectedPlanId={setSelectedPlanId}
+              plans={plans}
+              subdomain={subdomain}
+              clusters={clusters}
+              selectedClusterCode={selectedClusterCode}
+              setSelectedClusterCode={setSelectedClusterCode}
+              fetchPlansForCluster={fetchPlansForCluster}
+            />
           </div>
-
-          {/* Trust footer */}
-          <p className="text-center text-xs text-brand-muted mt-5 flex items-center justify-center gap-1.5">
-            <ChevronRight className="w-3 h-3 text-emerald-500" />
-            No payment due at signup. Activation handled by your property partner.
-          </p>
         </div>
+
+        {/* Trust footer */}
+        <p className="text-center text-xs text-brand-muted mt-5 flex items-center justify-center gap-1.5">
+          <ChevronRight className="w-3 h-3 text-emerald-500" />
+          No payment due at signup. Activation handled by your estate manager.
+        </p>
       </div>
     </section>
   )

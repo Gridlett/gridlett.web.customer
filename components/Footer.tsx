@@ -14,8 +14,6 @@ export default function Footer() {
 
   const productLinks = [
     { label: 'How it Works', href: '/#how-it-works' },
-    { label: 'Pricing Plans', href: '/pricing' },
-    { label: 'For Grid Hosts', href: '/pricing?tab=hosts' },
   ]
 
   const companyLinks = [
@@ -155,9 +153,14 @@ export default function Footer() {
             </span>
           </div>
 
-          <p className="text-xs text-brand-muted text-center md:text-right">
-            © {currentYear} Gridlett. Power.. to let. All rights reserved.
-          </p>
+          <div className="flex flex-col items-center md:items-end gap-1.5">
+            <p className="text-xs text-brand-muted text-center md:text-right">
+              © {currentYear} Gridlett. All rights reserved.
+            </p>
+            <p className="text-[11px] text-brand-muted/80 flex items-center gap-1">
+              Powered by <a href="https://gridlett.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-white hover:text-emerald-400 transition-colors">GridLett</a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

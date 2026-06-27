@@ -32,8 +32,6 @@ export default function Header() {
 
   const navLinks = [
     { label: 'How it works', href: '/#how-it-works' },
-    { label: 'Partners', href: '/partners' },
-    { label: 'Pricing', href: '/pricing' },
     { label: 'About Us', href: '/about' },
     { label: 'FAQs', href: '/faq' },
     { label: 'Contact', href: '/contact' },
@@ -97,15 +95,15 @@ export default function Header() {
             >
               Login
             </a>
-            <a
-              href="/pricing"
+            <Link
+              href="/register"
               className="btn-primary text-sm font-semibold px-5 py-2.5 rounded-xl text-white font-display"
               style={{
                 background: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
               }}
             >
               Get access
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -165,8 +163,8 @@ export default function Header() {
               >
                 Login to Portal
               </a>
-              <a
-                href="/pricing"
+              <Link
+                href="/register"
                 className="w-full text-center py-4 rounded-2xl font-bold text-white font-display"
                 style={{
                   background: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
@@ -174,7 +172,7 @@ export default function Header() {
                 }}
               >
                 Get access
-              </a>
+              </Link>
             </motion.div>
           </motion.div>
         )}

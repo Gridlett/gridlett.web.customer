@@ -62,66 +62,7 @@ const PLAN_RICH_CONFIG: Record<number, any> = {
   },
 }
 
-const PARTNER_ARRANGEMENTS = [
-  {
-    id: 'finance-stay',
-    tag: 'Arrangement 01',
-    name: 'Partner Financing',
-    tagline: 'Zero capital. Passive income and partnership',
-    color: '#10b981',
-    colorBg: 'rgba(16,185,129,0.06)',
-    colorBorder: 'rgba(16,185,129,0.30)',
-    icon: CircleDollarSign,
-    recommended: true,
-    upfront: '₦0',
-    upfrontNote: 'BNPL — full solar financed',
-    outcome: 'Revenue share after cost recovery. Controller stays permanently.',
-    highlights: [
-      'Gridlett installs panels, batteries & inverter',
-      'Controller stays permanently — belongs to Gridlett',
-      'You earn revenue share after cost recovery',
-      'Gridlett manages everything, forever',
-    ],
-  },
-  {
-    id: 'plug-in',
-    tag: 'Arrangement 02',
-    name: 'Plug-In Partnership',
-    tagline: 'You own the system. We provide the smart controls and billing automation.',
-    color: '#a855f7',
-    colorBg: 'rgba(168,85,247,0.06)',
-    colorBorder: 'rgba(168,85,247,0.25)',
-    icon: PlugZap,
-    upfront: 'Custom',
-    upfrontNote: 'Commissions only',
-    outcome: 'Stop billing disputes & overloads from day one.',
-    highlights: [
-      'You provide existing solar (or buy independently)',
-      'Gridlett installs Smart Controller (stays permanently)',
-      'Automated billing, limits & tenant portal',
-      'Commission-based — no upfront from Gridlett',
-    ],
-  },
-  {
-    id: 'finance-exit',
-    tag: 'Arrangement 03',
-    name: 'Financing Only',
-    tagline: 'We finance your solar. You own it after payoff.',
-    color: '#3b82f6',
-    colorBg: 'rgba(59,130,246,0.06)',
-    colorBorder: 'rgba(59,130,246,0.25)',
-    icon: TrendingUp,
-    upfront: '₦0',
-    upfrontNote: 'BNPL — full solar financed',
-    outcome: 'Full solar ownership at end of term. No more commission.',
-    highlights: [
-      'Gridlett installs panels, batteries & inverter',
-      'Controller operated by Gridlett during term',
-      'Costs paid via fixed monthly installments',
-      'At payoff: controller removed, solar is yours',
-    ],
-  },
-]
+
 
 function PlanCardSkeleton() {
   return (
@@ -142,7 +83,6 @@ function PlanCardSkeleton() {
 }
 
 export default function PricingClient() {
-  const [activeTab, setActiveTab] = useState<'subscribers' | 'hosts'>('subscribers')
   const [subscriberPlans, setSubscriberPlans] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -168,7 +108,7 @@ export default function PricingClient() {
   return (
     <div className="relative z-10 flex-1 pt-32 pb-24 px-6 max-w-6xl mx-auto w-full">
       {/* Header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-16">
         <span
           className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full mb-3"
           style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', color: '#60a5fa' }}
@@ -181,43 +121,19 @@ export default function PricingClient() {
           <span className="text-gradient-blue">every scale</span>
         </h1>
         <p className="mt-4 text-brand-text max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-          Select your profile to view subscription plans or microgrid installations.
+          Select a subscription tier that matches your daily energy needs.
         </p>
-      </div>
-
-      {/* Tab Switcher */}
-      <div className="flex justify-center mb-16">
-        <div className="bg-brand-navy/60 border border-brand-border/40 p-1.5 rounded-2xl flex gap-1.5 backdrop-blur-md">
-          <button
-            onClick={() => setActiveTab('subscribers')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-display font-bold text-sm transition-all ${activeTab === 'subscribers'
-              ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
-              : 'text-brand-text hover:text-white'
-              }`}
-          >
-            Energy Plans
-          </button>
-          <button
-            onClick={() => setActiveTab('hosts')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-display font-bold text-sm transition-all ${activeTab === 'hosts'
-              ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
-              : 'text-brand-text hover:text-white'
-              }`}
-          >
-            Property Partners
-          </button>
-        </div>
       </div>
 
       {/* Pricing Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-16">
-        {isLoading && activeTab === 'subscribers' ? (
+        {isLoading ? (
           <>
             <PlanCardSkeleton />
             <PlanCardSkeleton />
             <PlanCardSkeleton />
           </>
-        ) : activeTab === 'subscribers' ? (
+        ) : subscriberPlans.length > 0 ? (
           subscriberPlans.map((plan) => {
             const rich = PLAN_RICH_CONFIG[plan.sortOrder] || PLAN_RICH_CONFIG[1]
             const priceStr = plan.amount ? `₦${plan.amount.toLocaleString()}` : 'Free'
@@ -308,7 +224,7 @@ export default function PricingClient() {
                 {/* Action Button */}
                 <div className="pt-4 mt-auto">
                   <Link
-                    href="/#signup"
+                    href="/register"
                     className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-center font-bold text-sm font-display transition-all ${rich.popular
                       ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/20 hover:opacity-90'
                       : 'border border-brand-border hover:border-brand-border/80 text-brand-text hover:text-white'
@@ -322,91 +238,9 @@ export default function PricingClient() {
             )
           })
         ) : (
-          // ── Partner Arrangements Tab ──
-          <>
-            {PARTNER_ARRANGEMENTS.map((arr) => {
-              const Icon = arr.icon
-              return (
-                <div
-                  key={arr.id}
-                  className="rounded-3xl p-6 md:p-8 flex flex-col justify-between relative border transition-all duration-300"
-                  style={{ background: arr.colorBg, borderColor: arr.colorBorder }}
-                >
-                  {arr.recommended && (
-                    <span
-                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-[10px] font-bold tracking-widest uppercase py-1 px-3.5 rounded-full shadow-lg"
-                      style={{ background: arr.color }}
-                    >
-                      Most Popular
-                    </span>
-                  )}
-
-                  <div>
-                    {/* Icon + tag */}
-                    <div className="flex items-center gap-2.5 mb-5">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center"
-                        style={{ background: `${arr.color}18`, border: `1px solid ${arr.color}30` }}
-                      >
-                        <Icon className="w-5 h-5" style={{ color: arr.color }} />
-                      </div>
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: arr.color }}>
-                        {arr.tag}
-                      </span>
-                    </div>
-
-                    {/* Name + tagline */}
-                    <h3 className="font-display font-bold text-xl text-white mb-1">{arr.name}</h3>
-                    <p className="text-xs text-brand-text leading-relaxed mb-5">{arr.tagline}</p>
-
-                    {/* Upfront */}
-                    <div className="flex items-baseline gap-2 mb-5">
-                      <span className="font-display text-4xl font-extrabold text-white">{arr.upfront}</span>
-                      <span className="text-xs text-brand-muted">{arr.upfrontNote}</span>
-                    </div>
-
-                    <hr className="border-brand-border/20 mb-5" />
-
-                    {/* Highlights */}
-                    <div className="space-y-2.5 mb-5">
-                      {arr.highlights.map((h, i) => (
-                        <div key={i} className="flex items-start gap-2 text-sm">
-                          <Check className="w-4 h-4 shrink-0 mt-0.5" style={{ color: arr.color }} />
-                          <span className="text-brand-text leading-tight">{h}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Outcome */}
-                    <div
-                      className="rounded-xl px-4 py-3 text-xs leading-relaxed"
-                      style={{ background: `${arr.color}10`, borderLeft: `3px solid ${arr.color}60`, color: '#cbd5e1' }}
-                    >
-                      <span className="font-bold text-white">Outcome: </span>{arr.outcome}
-                    </div>
-                  </div>
-
-                  {/* CTAs */}
-                  <div className="pt-6 mt-auto space-y-2">
-                    <Link
-                      href="/partners"
-                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-center font-bold text-sm font-display transition-all text-white hover:opacity-90"
-                      style={{ background: arr.color }}
-                    >
-                      Full arrangement details
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link
-                      href="/contact"
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-center text-sm font-semibold border border-brand-border text-brand-text hover:text-white hover:border-brand-border/80 transition-all"
-                    >
-                      Talk to us →
-                    </Link>
-                  </div>
-                </div>
-              )
-            })}
-          </>
+          <div className="col-span-3 text-center py-8 text-brand-muted text-sm glass-card rounded-2xl border border-brand-border/40">
+            No plans found. Please check back later.
+          </div>
         )}
       </div>
 
@@ -416,21 +250,11 @@ export default function PricingClient() {
         style={{ background: 'rgba(21, 30, 46, 0.4)' }}
       >
         <h4 className="font-display font-semibold text-white text-base mb-2">
-          {activeTab === 'subscribers' ? 'Need dynamic limits?' : 'Ready to get started?'}
+          Need dynamic limits?
         </h4>
         <p className="text-xs text-brand-muted leading-relaxed max-w-xl mx-auto">
-          {activeTab === 'subscribers'
-            ? 'Energy access is controlled at the cluster level by your estate hosts. Wattage limits represent real-time draw limits, not monthly energy volume caps. If you need custom quotas, consult your estate manager.'
-            : 'Each partnership arrangement is tailored to your property. Visit our dedicated Partners page for full details on how each model works, or contact us directly to book a free site assessment.'}
+          Energy access is allocated at the cluster level. Wattage limits represent real-time draw limits, not monthly energy volume caps. If you need custom quotas for your apartment, please consult your estate manager.
         </p>
-        {activeTab === 'hosts' && (
-          <Link
-            href="/partners"
-            className="inline-flex items-center gap-2 mt-4 text-sm font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
-          >
-            Explore all partner arrangements →
-          </Link>
-        )}
       </div>
     </div>
   )
