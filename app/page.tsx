@@ -1,8 +1,7 @@
-import { Zap, Shield, BarChart3, Users, CheckCircle2, Building2, ArrowRight, Play, MessageSquare, Star } from 'lucide-react'
-import SignupSection from '@/components/SignupSection'
+import { Zap, Shield, BarChart3, Users, CheckCircle2, Building2, ArrowRight } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import PageWrapper from '@/components/PageWrapper'
+import HomePlans from '@/components/HomePlans'
 import Link from 'next/link'
 import { Metadata } from 'next'
 
@@ -14,74 +13,36 @@ export const metadata: Metadata = {
   },
 }
 
-// ── Static data ────────────────────────────────────────────────
-const STATS = [
-  { value: '99.9%', label: 'Uptime reliability' },
-  { value: '3 tiers', label: 'Usage plans' },
-  { value: '₦0', label: 'Upfront host cost' },
-  { value: '24/7', label: 'Edge monitoring' },
-]
-
 const HOW_IT_WORKS = [
   {
     icon: Building2,
     step: 'A',
-    title: 'Property host registers',
-    body: 'The property host or manager registers the property. Gridlett installs the solar assets and smart edge controllers.',
+    title: 'Verify your property',
+    body: 'Enter your estate or building code during registration to link your apartment to our active microgrid.',
     color: 'blue',
   },
   {
     icon: Users,
     step: 'B',
-    title: 'Subscribers select a tier',
-    body: 'Tenants and residents pick a monthly plan tier (Essential, Standard, or Premium) that fits their budget. No surprise bills.',
+    title: 'Choose a power plan',
+    body: 'Pick the subscription tier that matches your daily appliances (Essential, Standard, or Premium). No hidden fees.',
     color: 'emerald',
   },
   {
     icon: Shield,
     step: 'C',
-    title: 'Gridlett enforces limits',
-    body: 'Our edge controllers monitor load draws in real-time, preventing users from exceeding their allocated plan limits.',
+    title: 'Activate your connection',
+    body: 'Register online to activate your switch. Our smart controllers automatically keep usage within your selected tier limits.',
     color: 'blue',
   },
   {
     icon: BarChart3,
     step: 'D',
-    title: 'Uptime stays stable',
-    body: 'No single occupant can drain the batteries or overload the inverter. Uptime stays high for the entire building.',
+    title: 'Enjoy constant power',
+    body: 'Get uninterrupted, clean electricity without noisy generators, fuel logistics, or surprise shared bills.',
     color: 'emerald',
   },
 ]
-
-const TESTIMONIALS = [
-  {
-    quote: "Our commercial plaza generator costs dropped by 70%. Gridlett's automatic limit protection means we never argue with tenants about overloads or split bills.",
-    author: "Alhaji Ibrahim K.",
-    role: "Plaza Host (Property Owner)",
-    location: "Lagos",
-  },
-  {
-    quote: "I run my software agency all day from home. No generator fumes, no sudden blackouts, and I pay a fixed monthly tier. It has changed how I work.",
-    author: "Chinedu O.",
-    role: "Resident Subscriber",
-    location: "Abuja",
-  },
-  {
-    quote: "We retrofitted Gridlett smart switches onto our existing estate solar system. It finally secured our battery bank and made subscription collection seamless.",
-    author: "Mrs. Amina Y.",
-    role: "Estate Host (Facility Manager)",
-    location: "Port Harcourt",
-  },
-]
-
-const PROOF_ITEMS = [
-  'No generator noise',
-  'No power blackout',
-  'No shared-bill disputes',
-  'No upfront hardware cost',
-]
-
-// ── Components ─────────────────────────────────────────────────
 
 function HeroPowerOrb() {
   return (
@@ -104,50 +65,18 @@ function HeroPowerOrb() {
   )
 }
 
-function StatsBand() {
-  return (
-    <div className="border-y border-brand-border/50 py-10"
-      style={{ background: 'linear-gradient(90deg, rgba(59,130,246,0.03), rgba(16,185,129,0.03))' }}>
-      <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        {STATS.map((s) => (
-          <div key={s.label}>
-            <p className="text-3xl font-bold font-display text-gradient-blue">{s.value}</p>
-            <p className="text-sm text-brand-muted mt-1 font-medium">{s.label}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ProofBadges() {
-  return (
-    <div className="flex flex-wrap gap-3 justify-center mt-6">
-      {PROOF_ITEMS.map((item) => (
-        <span key={item}
-          className="flex items-center gap-1.5 text-sm text-brand-text px-3 py-1.5 rounded-full"
-          style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          {item}
-        </span>
-      ))}
-    </div>
-  )
-}
-
 function HowItWorks() {
   return (
     <section className="py-24 px-6 border-t border-brand-border/30" id="how-it-works">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-3">The system</p>
+          <p className="text-xs font-semibold tracking-widest text-blue-400 uppercase mb-3">How it works</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-white leading-tight">
-            Structured power,{' '}
-            <span className="text-gradient-emerald">shared fairly</span>
+            Reliable power,{' '}
+            <span className="text-gradient-emerald">made simple</span>
           </h2>
           <p className="mt-4 text-brand-text max-w-xl mx-auto leading-relaxed text-sm md:text-base">
-            Gridlett sits between the solar assets and the end users — enforcing capacity boundaries,
-            collecting subscriptions, and keeping the microgrid stable.
+            We connect your home directly to clean, uninterrupted solar electricity. No noisy generators, no maintenance hassles, just power you can count on.
           </p>
         </div>
 
@@ -188,117 +117,6 @@ function HowItWorks() {
 
 
 
-// ── New Section: UAT Video Showcase ───────────────────────────
-function UATVideoShowcase() {
-  return (
-    <section className="py-24 px-6 border-t border-brand-border/30 max-w-5xl mx-auto w-full">
-      <div className="grid md:grid-cols-5 gap-10 items-center">
-        <div className="col-span-2 space-y-5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            System Walkthrough
-          </div>
-          <h2 className="font-display text-3xl font-bold text-white leading-tight">
-            See the control layer in action
-          </h2>
-          <p className="text-sm text-brand-text leading-relaxed">
-            During our User Acceptance Testing (UAT), we verified live inverter telemetry and automatic limit cutoff. Watch how our edge controllers instantly respond to load overloads.
-          </p>
-          <ul className="space-y-2.5 text-xs text-brand-muted">
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-blue-400" />
-              Real-time telemetry streams
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-blue-400" />
-              Automatic overload cutoff demonstration
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-blue-400" />
-              Local edge control verification
-            </li>
-          </ul>
-        </div>
-
-        {/* Video Frame Mockup */}
-        <div className="col-span-3">
-          <div className="relative aspect-video rounded-2xl overflow-hidden border border-brand-border/80 bg-brand-navy/60 group shadow-2xl flex items-center justify-center">
-            {/* Dark Overlay Grid */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-
-            {/* Pulse Play Icon */}
-            <div className="relative z-10 w-16 h-16 rounded-full bg-blue-500 text-white flex items-center justify-center cursor-pointer hover:scale-105 hover:bg-blue-400 transition-all duration-300 shadow-xl shadow-blue-500/30">
-              <Play className="w-6 h-6 fill-white ml-1" />
-            </div>
-
-            {/* Mock Telemetry HUD overlay */}
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[10px] font-mono text-emerald-400">
-              <span className="flex items-center gap-1.5 bg-slate-900/80 px-2 py-1 rounded border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                GRID_EDGE_01: ONLINE
-              </span>
-              <span className="bg-slate-900/80 px-2 py-1 rounded border border-emerald-500/20">
-                LIMIT: 1200W · LOAD: 420W
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── New Section: Testimonials Grid ────────────────────────────
-function Testimonials() {
-  return (
-    <section className="py-24 px-6 border-t border-brand-border/30 max-w-5xl mx-auto w-full">
-      <div className="text-center mb-16">
-        <div className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full mb-3"
-          style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', color: '#34D399' }}>
-          <MessageSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          Early Pilot Feedback
-        </div>
-        <h2 className="font-display text-3xl font-bold text-white">
-          Trusted by hosts & subscribers
-        </h2>
-        <p className="mt-4 text-brand-text max-w-md mx-auto text-sm leading-relaxed">
-          See how our structured solar grids are resolving the challenges of shared electricity access in Nigeria.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-6 items-stretch">
-        {TESTIMONIALS.map((t, idx) => (
-          <div
-            key={idx}
-            className="glass-card rounded-2xl p-6 border border-brand-border/40 flex flex-col justify-between relative"
-          >
-            <div>
-              {/* Star Rating */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <p className="text-sm text-brand-text leading-relaxed mb-6">
-                "{t.quote}"
-              </p>
-            </div>
-
-            <div className="border-t border-brand-border/20 pt-4 flex flex-col">
-              <span className="text-xs font-bold text-white">{t.author}</span>
-              <span className="text-[10px] text-brand-muted font-medium mt-0.5">
-                {t.role} · {t.location}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-// ── Main Page ──────────────────────────────────────────────────
 export default function HomePage() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -405,44 +223,24 @@ export default function HomePage() {
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-          <a
-            href="#signup"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-sm font-display text-white transition-transform hover:scale-[1.02]"
+        <div className="flex justify-center max-w-xs mx-auto">
+          <Link
+            href="#plans"
+            className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-sm font-display text-white transition-transform hover:scale-[1.02]"
             style={{ background: 'linear-gradient(135deg, #60a5fa, #3b82f6)', boxShadow: '0 4px 20px rgba(59,130,246,0.25)' }}
           >
             <Zap className="w-4 h-4 fill-white" />
-            View plans & subscribe
+            Get started
             <ArrowRight className="w-4 h-4" />
-          </a>
-          <a
-            href={`${process.env.NEXT_PUBLIC_PORTAL_URL || 'http://localhost:3000'}/login`}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-sm font-display text-brand-text border border-brand-border hover:text-white hover:border-brand-border/80 transition-all hover:scale-[1.02]"
-          >
-            Login to Portal
-          </a>
-        </div>
-
-        {/* Proof Badges */}
-        <div className="mt-12">
-          <ProofBadges />
+          </Link>
         </div>
       </section>
 
-      {/* ── STATS BAND ── */}
-      <StatsBand />
+      {/* ── PLANS ── */}
+      <HomePlans />
 
       {/* ── HOW IT WORKS ── */}
       <HowItWorks />
-
-      {/* ── UAT VIDEO SHOWCASE ── (coming soon — no video yet) */}
-      {/* <UATVideoShowcase /> */}
-
-      {/* ── TESTIMONIALS GRID ── (coming soon — no quotes yet) */}
-      {/* <Testimonials /> */}
-
-      {/* ── SIGNUP SECTION (Client Component) ── */}
-      <SignupSection />
 
       {/* ── FOOTER ── */}
       <Footer />

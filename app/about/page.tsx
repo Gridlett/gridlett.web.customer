@@ -35,7 +35,7 @@ const VALUES = [
   {
     icon: Sparkles,
     title: 'Sustainable Growth',
-    body: 'By optimizing shared solar assets, we help building managers monetize solar investments while reducing carbon footprints across commercial and residential spaces.',
+    body: 'By optimizing shared solar assets, we help deliver clean, sustainable solar energy directly to your apartment, reducing carbon footprints while lowering daily energy costs.',
     color: 'emerald',
   },
 ]
@@ -82,10 +82,10 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-brand-text leading-relaxed text-sm md:text-base">
                 <p>
-                  In many parts of Nigeria, grid instability forces businesses and multi-family homes to rely heavily on costly diesel and petrol generators. These generators are noisy, pollute the air, and require constant, manual fuel management.
+                  In many parts of Nigeria, grid instability forces apartments and shared complexes to rely heavily on costly diesel and petrol generators. These generators are noisy, pollute the air, and require constant, manual refueling.
                 </p>
                 <p>
-                  When property managers try to transition to shared solar systems, they face a new headache: <strong className="text-white font-bold">the tragedy of the commons</strong>. Without structure, one tenant turns on multiple air conditioners or high-load devices, draining the shared battery bank, overloading the inverter, and leaving everyone else in darkness.
+                  When complexes transition to shared solar systems, a common headache arises: without structure, one unit turning on multiple high-load devices can drain the shared battery bank, overloading the inverter and leaving the entire building in darkness.
                 </p>
                 <p>
                   This leads to constant friction, disputes over diesel and solar bill-splitting, and unstable power grids. <strong className="text-white font-bold">Gridlett was built to change that.</strong>
@@ -108,15 +108,15 @@ export default function AboutPage() {
               <ul className="space-y-3.5 text-sm">
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 shrink-0" />
-                  <span><strong className="text-white font-bold">Usage Boundaries</strong>: The controller prevents tenants from overloading the shared inverter.</span>
+                  <span><strong className="text-white font-bold">Smart Load Management</strong>: The controller prevents individual apartments from overloading the shared inverter.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
-                  <span><strong className="text-white font-bold">Fixed Subscriptions</strong>: Tenants select a plan tier that fits their budget. No surprise bills.</span>
+                  <span><strong className="text-white font-bold">Fixed Subscriptions</strong>: Subscribers select a plan tier that fits their budget. No surprise bills.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 shrink-0" />
-                  <span><strong className="text-white font-bold">Remote Monitoring</strong>: Real-time telemetry provides property managers with full system diagnostics.</span>
+                  <span><strong className="text-white font-bold">Smart Control</strong>: Real-time telemetry keeps the microgrid balanced and stable 24/7.</span>
                 </li>
               </ul>
             </div>
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 Guided by core principles
               </h2>
               <p className="mt-4 text-brand-text max-w-lg mx-auto text-sm">
-                How we approach technology, engineering, and our relationship with property partners and subscribers.
+                How we approach technology, engineering, and our relationship with our subscribers.
               </p>
             </div>
 
@@ -178,14 +178,14 @@ export default function AboutPage() {
             <div className="absolute -bottom-24 -right-24 w-48 h-48 orb-emerald opacity-40 pointer-events-none" />
 
             <h2 className="font-display text-2xl md:text-4xl font-bold text-white mb-4 leading-tight">
-              Ready to bring structured solar power <br />to your property?
+              Ready to experience reliable solar power?
             </h2>
             <p className="text-brand-text max-w-xl mx-auto mb-8 text-sm md:text-base">
-              Whether you are a tenant looking to subscribe to a stable energy plan, or a landlord wanting to install solar with ₦0 upfront cost, Gridlett has you covered.
+              Select a monthly subscription plan that fits your household appliance needs and get started with clean, constant energy today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/#signup"
+                href="/#plans"
                 className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-base font-display"
                 style={{
                   background: 'linear-gradient(135deg, #60a5fa, #3b82f6)',

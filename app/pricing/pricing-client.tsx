@@ -224,7 +224,7 @@ export default function PricingClient() {
                 {/* Action Button */}
                 <div className="pt-4 mt-auto">
                   <Link
-                    href="/#signup"
+                    href="/register"
                     className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-center font-bold text-sm font-display transition-all ${rich.popular
                       ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/20 hover:opacity-90'
                       : 'border border-brand-border hover:border-brand-border/80 text-brand-text hover:text-white'
@@ -253,7 +253,7 @@ export default function PricingClient() {
           Need dynamic limits?
         </h4>
         <p className="text-xs text-brand-muted leading-relaxed max-w-xl mx-auto">
-          Energy access is controlled at the cluster level by your estate hosts. Wattage limits represent real-time draw limits, not monthly energy volume caps. If you need custom quotas, consult your estate manager.
+          Energy access is allocated at the cluster level. Wattage limits represent real-time draw limits, not monthly energy volume caps. If you need custom quotas for your apartment, please consult your estate manager.
         </p>
       </div>
     </div>

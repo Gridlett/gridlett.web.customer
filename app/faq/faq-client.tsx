@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, HelpCircle, User, Building2 } from 'lucide-react'
+import { ChevronDown, HelpCircle } from 'lucide-react'
 
 interface FAQItemProps {
   question: string
@@ -55,15 +55,15 @@ function FAQItem({ question, answer, isOpen, onToggle }: FAQItemProps) {
 const SUBSCRIBER_FAQS = [
   {
     question: 'What is Gridlett?',
-    answer: 'Gridlett is a smart electricity access system that brings stable, solar power to shared properties (plazas, residential blocks, and estates) in Nigeria using automated load management and flexible tier subscriptions.',
+    answer: 'Gridlett is a smart electricity access system that brings stable, clean solar power to shared residential blocks and estates in Nigeria using automated load management and flexible tier subscriptions.',
   },
   {
     question: 'What happens during an internet outage?',
-    answer: 'The Gridlett Smart Controller is designed to run locally at the edge. It enforces limits and routes solar energy without needing an active internet connection. It buffers telemetry logs locally and uploads them once the internet is restored. Your power access remains completely uninterrupted.',
+    answer: 'The Gridlett Smart Controller runs locally at the edge. It enforces limits and routes solar energy without needing an active internet connection. Your power access remains completely uninterrupted.',
   },
   {
     question: 'How does the Smart Controller prevent grid overload?',
-    answer: 'Our smart control hardware is installed alongside the solar system. It monitors each unit’s real-time electricity draw. If your usage exceeds your tier capacity (e.g. running heavy appliances), the controller temporarily cuts power to your unit, protecting the battery bank and inverter from blowing. Power is restored automatically once the load is reduced.',
+    answer: 'Our smart control hardware monitors your apartment’s real-time electricity draw. If your usage exceeds your tier capacity (e.g. running high-draw appliances), the controller temporarily cuts power to protect the battery bank and inverter from blowing. Power is restored automatically once the load is reduced.',
   },
   {
     question: 'Can I run my refrigerator or iron on the Essential plan?',
@@ -79,43 +79,12 @@ const SUBSCRIBER_FAQS = [
   },
 ]
 
-const HOST_FAQS = [
-  {
-    question: 'What are the different installation models for hosts?',
-    answer: 'We offer three models: (1) Smart Hardware Retrofit: We add our control switches to your existing solar setups to stop overloads and automate billing. (2) Buy Now, Pay Later (BNPL) / Revenue Share: Gridlett installs the solar assets + controllers with ₦0 upfront cost, recovering the expense through resident subscription revenues. (3) Outright Purchase: You purchase the full system upfront.',
-  },
-  {
-    question: 'How is resident subscription revenue disbursed to hosts?',
-    answer: 'For hosts using our Revenue Share/BNPL model, resident payments are processed automatically. Gridlett takes its management cut, and the rest is disbursed directly to your registered bank account on a bi-weekly or monthly schedule.',
-  },
-  {
-    question: 'Is the Smart Controller compatible with any inverter system?',
-    answer: 'Yes. Our smart metering switches integrate with standard inverters and battery banks, making it easy to upgrade your existing solar investment into a structured, revenue-generating grid.',
-  },
-  {
-    question: 'Who handles maintenance of the solar hardware?',
-    answer: 'Gridlett and our certified engineering partners handle all maintenance, solar panel cleaning, battery balancing, and technical support. There are no sudden maintenance levies for hosts or subscribers.',
-  },
-  {
-    question: 'How does a host register a new building or compound?',
-    answer: 'Hosts can register their building and its technical capacity on our Partner Portal. Once registered, a unique "Cluster Code" is generated, which residents use to sign up and join the grid.',
-  },
-]
-
 export default function FAQClient() {
-  const [activeTab, setActiveTab] = useState<'subscribers' | 'hosts'>('subscribers')
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
   }
-
-  const handleTabChange = (tab: 'subscribers' | 'hosts') => {
-    setActiveTab(tab)
-    setOpenIndex(null) // Close accordions on tab switch
-  }
-
-  const currentFAQs = activeTab === 'subscribers' ? SUBSCRIBER_FAQS : HOST_FAQS
 
   return (
     <div className="relative z-10 flex-1 pt-32 pb-16">
@@ -132,39 +101,13 @@ export default function FAQClient() {
             <span className="text-gradient-emerald">Questions</span>
           </h2>
           <p className="mt-4 text-brand-text max-w-lg mx-auto text-sm leading-relaxed">
-            Select your profile below to find answers to common questions about Gridlett smart solar grids.
+            Find answers to common questions about Gridlett smart solar subscriptions.
           </p>
-        </div>
-
-        {/* Tab Toggle */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-brand-navy/60 border border-brand-border/40 p-1.5 rounded-2xl flex gap-1.5 backdrop-blur-md">
-            <button
-              onClick={() => handleTabChange('subscribers')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${activeTab === 'subscribers'
-                  ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
-                  : 'text-brand-text hover:text-white'
-                }`}
-            >
-              <User className="w-4 h-4" />
-              For Subscribers
-            </button>
-            <button
-              onClick={() => handleTabChange('hosts')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-display font-semibold text-sm transition-all ${activeTab === 'hosts'
-                  ? 'bg-blue-500 text-white shadow-md shadow-blue-500/25'
-                  : 'text-brand-text hover:text-white'
-                }`}
-            >
-              <Building2 className="w-4 h-4" />
-              For Hosts
-            </button>
-          </div>
         </div>
 
         {/* FAQ List */}
         <div className="space-y-4 mb-16">
-          {currentFAQs.map((faq, idx) => (
+          {SUBSCRIBER_FAQS.map((faq, idx) => (
             <FAQItem
               key={idx}
               question={faq.question}

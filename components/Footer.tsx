@@ -14,7 +14,6 @@ export default function Footer() {
 
   const productLinks = [
     { label: 'How it Works', href: '/#how-it-works' },
-    { label: 'Pricing Plans', href: '/pricing' },
   ]
 
   const companyLinks = [
