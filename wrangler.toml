@@ -1,4 +1,4 @@
-name = "gridlett-customer-website"
+name = "gridlett-customer-website-staging"
 main = ".open-next/worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
